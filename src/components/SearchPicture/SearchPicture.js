@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 export default function SearchPicture(props) {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -9,13 +10,23 @@ export default function SearchPicture(props) {
 
   const onClickSearchHandler = () => {
     props.search(searchTerm);
+    props.loading(true);
     setSearchTerm('');
   };
 
   return (
     <div>
-      <input type='text' onChange={onSearchHandler} value={searchTerm} />
-      <button onClick={onClickSearchHandler}>Search!</button>
+      <TextField
+        sx={{ width: '20%' }}
+        size='small'
+        type='text'
+        label='Search Term'
+        onChange={onSearchHandler}
+        value={searchTerm}
+      />
+      <Button style={{ height: '40px' }} variant='outlined' onClick={onClickSearchHandler}>
+        Search!
+      </Button>
     </div>
   );
 }

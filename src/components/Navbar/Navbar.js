@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,35 +7,46 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import uuid from 'react-uuid';
+import Badge from '@mui/material/Badge';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
-const Navbar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+const Navbar = ({ favNum, favorites }) => {
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const resetFavNum = () => {
+    localStorage.setItem('favCounter', 0);
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const pages = [
+    <StyledLink to='/'>Main Page</StyledLink>,
+    <StyledLink to='/APOD'>NASA's picture of the day</StyledLink>,
+    <StyledLink to='/satellites'>Satellite location approximation</StyledLink>,
+    <Badge
+      onClick={resetFavNum}
+      sx={{ color: 'pink', marginRight: '1.3em', width: '25px' }}
+      //need to use length of array of photos in mongoDB to persist favNum
+      badgeContent={favNum < 0 ? 0 : favNum}
+      color='secondary'>
+      <StyledLink to='/saved' style={{ color: 'pink' }}>
+        <FavoriteIcon size='large' />
+      </StyledLink>
+    </Badge>,
+  ];
 
   return (
-    <AppBar position='fixed'>
+    <AppBar position='fixed' color='inherit'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
           <Typography
@@ -43,12 +54,12 @@ const Navbar = () => {
             noWrap
             component='div'
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}>
-            LOGO
+            <StyledLink to='/'>Main Page</StyledLink>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
-              size='large'
+              size='small'
               aria-label='account of current user'
               aria-controls='menu-appbar'
               aria-haspopup='true'
@@ -74,57 +85,22 @@ const Navbar = () => {
                 display: { xs: 'block', md: 'none' },
               }}>
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={uuid()} onClick={handleCloseNavMenu}>
                   <Typography textAlign='center'>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+          <Box
+            sx={{ justifyContent: 'flex-end', flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.slice(1).map((page) => (
               <Button
-                key={page}
+                key={uuid()}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}>
                 {page}
               </Button>
             ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title='Open settings'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id='menu-appbar'
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}>
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
           </Box>
         </Toolbar>
       </Container>
@@ -132,3 +108,8 @@ const Navbar = () => {
   );
 };
 export default Navbar;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+`;
