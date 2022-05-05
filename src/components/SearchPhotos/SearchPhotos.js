@@ -20,6 +20,7 @@ export default function SearchPhotos({ photos, favCount }) {
     vertical: 'top',
     horizontal: 'center',
   });
+
   const { vertical, horizontal, open } = state;
   const [page, setPage] = useState(1);
   const [error, setError] = useState(false);
@@ -62,7 +63,11 @@ export default function SearchPhotos({ photos, favCount }) {
       });
     setError(false);
   };
-  console.log(error);
+
+  const pageClickHandler = (data, pageNumber) => {
+    setPage(pageNumber);
+  };
+
   const photosList = photos.slice((page - 1) * 4, page * 4).map((photo) => {
     return (
       <PictureDescriptionContainer key={photo.data[0].nasa_id}>
@@ -94,9 +99,7 @@ export default function SearchPhotos({ photos, favCount }) {
       </PictureDescriptionContainer>
     );
   });
-  const pageClickHandler = (data, pageNumber) => {
-    setPage(pageNumber);
-  };
+
   return (
     <>
       <div>{photosList}</div>
@@ -110,9 +113,8 @@ export default function SearchPhotos({ photos, favCount }) {
           <Snackbar
             open={open}
             anchorOrigin={{ vertical, horizontal }}
-            autoHideDuration={3000}
+            autoHideDuration={1000}
             onClose={handleClose}
-            message='Saved!'
             action={action}>
             <Alert onClose={handleClose} severity='success' sx={{ width: '100%' }}>
               Saved successfully!
@@ -124,12 +126,11 @@ export default function SearchPhotos({ photos, favCount }) {
             <Snackbar
               open={open}
               anchorOrigin={{ vertical, horizontal }}
-              autoHideDuration={3000}
+              autoHideDuration={1000}
               onClose={handleClose}
-              message='Saved!'
               action={action}>
               <Alert onClose={handleClose} severity='error' sx={{ width: '100%' }}>
-                Cannot save multiple photos!
+                Photo already saved!
               </Alert>
             </Snackbar>
           </div>

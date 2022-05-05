@@ -26,8 +26,15 @@ In order to view this project,
 
 On the root directory open up on one terminal and run the commands:
 
-`npm install npm run start`
+```
+npm install
+npm run start
+```
 
 On open up another and run the commands:
 
-`cd server npm install npm run server:start`
+```
+cd server
+npm install
+npm run server:start
+```
