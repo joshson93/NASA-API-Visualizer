@@ -61,7 +61,6 @@ export default function Satellite() {
       axios
         .get(url)
         .then((data) => {
-          console.log(data.data);
           setAltitude(data.data.geodetic.altitude.toFixed(2));
           setLatitude(data.data.geodetic.latitude.toFixed(4));
           setLongitude(data.data.geodetic.longitude.toFixed(4));

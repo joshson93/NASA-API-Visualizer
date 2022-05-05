@@ -26,7 +26,6 @@ export default function PictureOfDay() {
     const url = `https://api.nasa.gov/planetary/apod?api_key=${process.env.REACT_APP_APIKEY}&date=${date}`;
     const data = axios.get(url);
     data.then((data) => {
-      console.log(data.data);
       setImageSrc(data.data.url);
       setTitle(data.data.title);
       setExplanation(data.data.explanation);
